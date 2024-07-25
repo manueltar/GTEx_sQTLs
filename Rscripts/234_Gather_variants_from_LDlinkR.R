@@ -337,10 +337,6 @@ data_wrangling = function(option_list)
         }#LINE_gate> 0
       }# SIZE_gate> 0
     }# dim(df_files_sel)[1] >0
-    
-    # ###############################
-    # quit(status = 1)
-    
   }# i in 1:length(pos_for_LDlinkR_array)
   
   
@@ -357,25 +353,33 @@ data_wrangling = function(option_list)
     cat("\n")
     
     
-    # ####chek AF-----
-    # 
-    # Results_long<-unique(as.data.frame(cSplit(Results,sep = ';', direction = "long",
-    #                                                                            splitCols = c("Proxy_rsid","Proxy_R2","Proxy_MAF")),stringsAsFactors=F))
-    # 
-    # 
-    # cat("Results_long_0\n")
-    # cat(str(Results_long))
-    # cat("\n")
-    # 
-    # Results_long.dt<-data.table(Results_long, key=c('LD_threshold'))
-    # 
-    # 
-    # 
-    # Results_long_MIN<-as.data.frame(Results_long.dt[,.SD[which.min(Proxy_MAF)], by=key(Results_long.dt)], stringsAsFactors=F)
-    # 
-    # cat("Results_long_MIN_0\n")
-    # cat(str(Results_long_MIN))
-    # cat("\n")
+    #### Rescue variants not in 1000G pannel ----
+    
+    
+    input_file_rescue<-input_file[-which(input_file$VAR%in%Results$VAR),]
+    
+    cat("input_file_rescue_0\n")
+    cat(str(input_file_rescue))
+    cat("\n")
+    cat(str(unique(input_file_rescue$VAR)))
+    cat("\n")
+    cat(str(unique(input_file_rescue$rs)))
+    cat("\n")
+    
+    
+    Results<-merge(Results,
+                   input_file_rescue,
+                   by=colnames(input_file_rescue)[which(colnames(input_file_rescue)%in%colnames(Results))],
+                   all=T)
+    
+    
+    cat("Results_1\n")
+    cat(str(Results))
+    cat("\n")
+    cat(str(unique(Results$VAR)))
+    cat("\n")
+    cat(str(unique(Results$rs)))
+    cat("\n")
     
    ### save ----
     
